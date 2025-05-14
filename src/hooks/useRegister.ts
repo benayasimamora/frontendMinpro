@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useDispatch, UseDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCredentials } from "@/store/slices/authSlice";
-import { data } from "framer-motion/client";
+import { showSuccess, showError } from "@/utils/toast";
 
 type RegisterPayload = {
   full_name: string;
@@ -24,19 +24,25 @@ type RegisterResponse = {
 export function useRegister() {
   const dispatch = useDispatch();
 
-  return useMutation<RegisterResponse, Error, RegisterPayload>({
-    mutationFn: async (data) => {
-      const res = await axios.post<RegisterResponse>(
-        "/api/auth/reigster",
+  return useMutation({
+    mutationFn: async (data: {
+      full_name: string;
+      email: string;
+      password: string;
+      referral_code?: string;
+    }) => {
+      const res = await axios.post<{ token: string; user: any }>(
+        "/api/auth/register",
         data
       );
       return res.data;
     },
     onSuccess: (data) => {
       dispatch(setCredentials(data));
+      showSuccess("Register Berhasil");
     },
-    onError: (error: Error) => {
-      console.error("Register failed:", error.message);
+    onError: (err: any) => {
+      showError(err.response?.data?.message || "Register Gagal");
     },
   });
 }
