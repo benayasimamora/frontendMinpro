@@ -25,8 +25,8 @@ import {
   AlertTriangle,
   Info,
 } from "lucide-react";
-import { withAuth } from "@/hocs/withAuth";
-import { withRole } from "@/hocs/withRole";
+import { withAuth } from "@/HOC/withAuth";
+import { withRole } from "@/HOC/withRole";
 
 // Mock data
 const mockEvents = [
